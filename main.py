@@ -1,3 +1,5 @@
+import time
+
 import requests
 import os
 
@@ -42,12 +44,14 @@ def delete_pages(page_ids):
         url = f"https://api.notion.com/v1/pages/{pid}"
         requests.patch(url, headers=headers, json={"archived": True})
         print(f"[{i}/{len(page_ids)}] 삭제 완료: {pid}")
+        time.sleep(0.35)  # Notion API rate limit 고려 (약 3 req/sec)
 
 def restore_pages(page_ids):
     for i, pid in enumerate(page_ids, 1):
         url = f"https://api.notion.com/v1/pages/{pid}"
         requests.patch(url, headers=headers, json={"archived": False})
         print(f"[{i}/{len(page_ids)}] 복원 완료: {pid}")
+        time.sleep(0.35)  # Notion API rate limit 고려 (약 3 req/sec)
 
 def backup_page_ids(page_ids, file_path):
     with open(file_path, "w", encoding="utf-8") as f:
